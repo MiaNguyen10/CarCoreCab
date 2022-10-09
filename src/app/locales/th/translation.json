@@ -1,0 +1,31 @@
+{
+  "NAME": "Car AI Core Cap : Labeling Tool",
+  "CANCEL_BUTTON": "ยกเลิก",
+
+  "USER_TITLE": "รายละเอียดผู้ใช้งาน",
+  "USER_LABEL_ADD_USER": "เพิ่มผู้ใช้ใหม่",
+  "USER_EMAIL": "อีเมล",
+  "USER_LABEL_FIRSTNAME": "ชื่อ",
+  "USER_LABEL_LASTNAME": "นามสกุล",
+  "USER_LABEL_COMPANY": "บริษัท",
+  "USER_USER_ROLE": "บทบาท",
+  "USER_LABEL_STATUS": "สถานะ",
+  "USER_BUTTON_SAVE": "บันทึก",
+  "USER_BUTTON_CANCEL": "ยกเลิก",
+  "USER_LABEL_EDIT_USER": "แก้ไขรายละเอียด",
+
+  "CAR_POP_UP_DESC_1": "กรุณาระบุ",
+  "CAR_POP_UP_DESC_2": "เลขทะเบียน",
+  "CAR_POP_UP_DESC_3": "และ",
+  "CAR_POP_UP_DESC_4": "จังหวัด",
+  "CAR_POP_UP_DESC_5": "ตามป้ายทะเบียน",
+  "CAR_LICENSE_PLATE_NO": "เลขทะเบียน",
+  "CAR_PROVINCE": "จังหวัด",
+  "CAR_POP_UP_ADD_BUTTON": "เพิ่มรถใหม่",
+  "CAR_CAR_LABELING_STEP_3_DESC": "กรุณาใส่ รูปหน้าคอนโซลเต็ม (ถ่ายให้เห็นเกียร์)",
+  "CAR_CAR_LABELING_ADD_IMAGE": "เพิ่มรูป",
+  "CAR_CAR_LABELING_SAMPLE": "ตัวอย่าง",
+  "CAR_CAR_LABELING_SKIP_BUTTON": "ข้าม",
+  "CAR_CAR_LABELING_SAVE_BUTTON": "บันทึก & ถัดไป",
+  "CAR_CAR_LABELING_GEAR": "เกียร์"
+}
