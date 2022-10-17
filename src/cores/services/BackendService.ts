@@ -1,5 +1,7 @@
 import Container from 'typedi'
 
+import uuid from 'react-uuid'
+
 import { BackendApiClient } from 'app/ioc/token'
 import { HttpClient } from 'cores/adapters/interfaces'
 import { IBackend } from 'app/config/interfaces'
@@ -18,6 +20,8 @@ export abstract class BackendService {
     this.client = Container.get(BackendApiClient)
     this.header = {
       ...this.#config.headers,
+      requestId: uuid(),
+      requestDt: new Date().toISOString(),
     }
   }
 }

@@ -1,5 +1,5 @@
 const pages = {
-  default: '/company/list',
+  default: '/car/list',
   loginPath: '/',
   expiredLink: '/expired-link',
   forgotPassword: '/forgot-password',

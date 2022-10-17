@@ -8,6 +8,7 @@ import {
   ICompanyPath,
   ICar,
   ISession,
+  IConstantPath,
 } from 'app/config/interfaces'
 import { Service } from 'typedi'
 
@@ -29,6 +30,8 @@ export class ConfigService {
 
   public readonly car: Readonly<ICar>
 
+  public readonly constant: Readonly<IConstantPath>
+
   public readonly backend: Readonly<IBackend>
 
   constructor() {
@@ -38,7 +41,8 @@ export class ConfigService {
     }
 
     this.session = {
-      idleTime: 1000 * 1,
+      idleTime: 1000,
+      expiredTime: 1000 * 60 * 30,
     }
 
     this.google = {
@@ -95,6 +99,13 @@ export class ConfigService {
         revokeCar: 'v1/car/revoke',
       },
       stateName: 'company',
+    }
+
+    this.constant = {
+      path: {
+        listProvince: '/v1/province/list',
+      },
+      stateName: 'constant',
     }
 
     this.backend = {

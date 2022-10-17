@@ -1,20 +1,14 @@
-import { Button, DialogContent, DialogContentText, Stack, styled } from '@mui/material'
+import { Button, DialogContent, DialogContentText, Stack } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import React from 'react'
 
-const ButtonDialogStyled = styled(Button)({
-  maxWidth: 56,
-  maxHeight: 26,
-  borderRadius: 2,
-})
-
-interface SuccessDialogProps {
+export interface NotifyDialogProps {
   desc?: string
   btnText?: string
   handleClose?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const NotifyDialog = ({ handleClose, desc, btnText }: SuccessDialogProps) => {
+const NotifyDialog = ({ handleClose, desc, btnText }: NotifyDialogProps) => {
   const { t } = useTranslation()
 
   return (
@@ -25,9 +19,9 @@ const NotifyDialog = ({ handleClose, desc, btnText }: SuccessDialogProps) => {
         </DialogContentText>
       </DialogContent>
       <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-        <ButtonDialogStyled onClick={handleClose} variant="contained" color="primary" size="small">
+        <Button onClick={handleClose} variant="contained" size="small">
           {btnText || t('DIALOG_OK')}
-        </ButtonDialogStyled>
+        </Button>
       </Stack>
     </>
   )

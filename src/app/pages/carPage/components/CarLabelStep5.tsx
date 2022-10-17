@@ -5,8 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import NoImage from 'app/assets/icons/NoImage'
 import SelectVector from 'app/assets/icons/SelectVector'
 import TaxSignImageTooltip from 'app/assets/images/TaxSignImageTooltip.png'
-import { LabelTypo, TextFieldFill } from 'app/components'
-import { dateFormats } from 'app/components/TextField/DatePickerBuddhist'
+import { LabelledInput, LabelTypo } from 'app/components'
 import { Brand } from 'app/config/Data'
 import { IImageSize } from 'app/pages/carPage/components/CarLabelStep3'
 import SampleImageTooltip from 'app/pages/carPage/components/SampleImageTooltip'
@@ -21,6 +20,7 @@ import { Controller, useForm, SubmitHandler } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as yup from 'yup'
+import { dateFormats } from 'app/config/Constant'
 
 interface ICarLabelStep5Props {
   carInformation: ICarInformation
@@ -52,6 +52,7 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
     formState: { errors: formErrors },
     control,
     watch,
+    register,
   } = useForm<ITaxSign>({
     mode: 'all',
     resolver: yupResolver(schema),
@@ -106,7 +107,7 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
           sx={{ backgroundColor: '#F7F7F7', width: 873, height: watch('image') ? 'auto' : 540, marginLeft: -4 }}
         >
           {watch('image')?.url ? (
-            <LabelImageHolder isUploadedImage={!!watch('image')}>
+            <LabelImageHolder>
               <Box
                 sx={{
                   width: 873,
@@ -135,18 +136,17 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
           )}
         </Stack>
         <Stack direction="column" spacing={3.3}>
+          <LabelledInput
+            title={`${t('CAR_CAR_LABELING_LICENSE_PLATE_NO')}`}
+            name="licensePlateNo"
+            errors={formErrors}
+            register={register}
+            disabled={!watch('image')}
+            sx={{ width: 320 }}
+            required
+          />
           <div>
-            <LabelTypo desc={`${t('CAR_CAR_LABELING_LICENSE_PLATE_NO')}`} />
-            <Controller
-              control={control}
-              name="licensePlateNo"
-              render={({ field: { onChange, value }, fieldState: { error } }) => (
-                <TextFieldFill value={value} onChange={onChange} error={error} width={320} isView={!watch('image')} />
-              )}
-            />
-          </div>
-          <div>
-            <LabelTypo desc={`${t('CAR_CAR_LABELING_STEP_5_EXPIRY_DATE')}`} />
+            <LabelTypo desc={`${t('CAR_CAR_LABELING_STEP_5_EXPIRY_DATE')}`} required />
             <Controller
               control={control}
               name="expiryDate"
@@ -183,7 +183,7 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
             />
           </div>
           <div>
-            <LabelTypo desc={`${t('CAR_CAR_LABELING_MAKE_BRAND')}`} />
+            <LabelTypo desc={`${t('CAR_CAR_LABELING_MAKE_BRAND')}`} required />
             <Controller
               control={control}
               name="make"
@@ -222,16 +222,15 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
               )}
             />
           </div>
-          <div>
-            <LabelTypo desc={`${t('CAR_CAR_LABELING_FRAME_NO')}`} />
-            <Controller
-              control={control}
-              name="vinFrameNo"
-              render={({ field: { onChange, value }, fieldState: { error } }) => (
-                <TextFieldFill value={value} onChange={onChange} error={error} width={320} isView={!watch('image')} />
-              )}
-            />
-          </div>
+          <LabelledInput
+            title={`${t('CAR_CAR_LABELING_FRAME_NO')}`}
+            name="vinFrameNo"
+            errors={formErrors}
+            register={register}
+            disabled={!watch('image')}
+            sx={{ width: 320 }}
+            required
+          />
         </Stack>
       </Stack>
       {formErrors?.image && (
@@ -285,10 +284,10 @@ const CarLabelStep5 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
       </Stack>
       <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ width: '1273px' }}>
         <Button variant="contained" color="secondary" onClick={() => onChangeTab(5)}>
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SKIP_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SKIP_BUTTON')}
         </Button>
         <Button variant="contained" type="submit">
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SAVE_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SAVE_BUTTON')}
         </Button>
       </Stack>
     </Stack>

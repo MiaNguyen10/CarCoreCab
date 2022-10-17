@@ -8,6 +8,10 @@ const theme = createTheme({
       main: '#00A950',
       contrastText: 'white',
     },
+    secondary: {
+      main: '#BBBBBB',
+      contrastText: 'white',
+    },
   },
   typography: {
     fontFamily: 'Poppins',
@@ -23,12 +27,19 @@ const theme = createTheme({
   },
   components: {
     MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontSize: '14px',
+          color: '#333333',
+        },
+      },
       variants: [
         {
           props: { variant: 'h1' },
           style: {
             fontWeight: 600,
             fontSize: '32px',
+            color: '#012336',
           },
         },
         {
@@ -36,6 +47,7 @@ const theme = createTheme({
           style: {
             fontWeight: 600,
             fontSize: '24px',
+            color: '#FFFFFF',
           },
         },
         {
@@ -86,6 +98,12 @@ const theme = createTheme({
             color: '#012336',
           },
         },
+        {
+          props: { variant: 'button' },
+          style: {
+            fontWeight: 900,
+          },
+        },
       ],
     },
     MuiToolbar: {
@@ -109,6 +127,9 @@ const theme = createTheme({
           transition: 'none',
           pointerEvents: 'visibleFill',
           borderRadius: 2,
+          fontWeight: 900,
+          height: '44px',
+          minWidth: '88px',
           '&:hover': {
             backgroundColor: 'transparent',
           },
@@ -116,94 +137,97 @@ const theme = createTheme({
       },
       variants: [
         {
-          props: { variant: 'text', color: 'primary', size: 'large' },
-          style: {
-            fontWeight: 400,
-            fontSize: 20,
-            color: 'white',
-          },
-        },
-        {
-          props: { variant: 'contained', color: 'primary', size: 'large' },
-          style: {
-            fontWeight: 700,
-            fontSize: 20,
-            color: 'white',
-          },
-        },
-        {
-          props: { variant: 'contained', color: 'primary', size: 'medium' },
+          props: { variant: 'contained' },
           style: {
             background: '#00A950',
-            color: 'white',
-            fontSize: 14,
-            fontWeight: 900,
-            height: 44,
-            minWidth: 88,
+            height: '44px',
+            fontSize: '14px',
             '&:hover': {
               backgroundColor: '#00A950',
             },
           },
         },
         {
-          props: { variant: 'contained', color: 'warning', size: 'medium' },
+          props: { variant: 'contained', color: 'error' },
           style: {
             background: '#E53F3F',
             color: 'white',
-            fontSize: 14,
-            fontWeight: 900,
-            height: 44,
-            minWidth: 88,
             '&:hover': {
               backgroundColor: '#E53F3F',
             },
           },
         },
         {
-          props: { variant: 'contained', color: 'primary', size: 'small' },
+          props: { variant: 'contained', color: 'secondary' },
           style: {
-            background: '#00A950',
+            background: '#BBBBBB',
             color: 'white',
-            fontSize: 12,
-            fontWeight: 900,
             '&:hover': {
-              backgroundColor: '#00A950',
+              backgroundColor: '#BBBBBB',
             },
           },
         },
         {
           props: { variant: 'outlined' },
           style: {
-            background: 'white',
             color: '#00A950',
             border: '1px solid #00A950',
             height: '44px',
             fontSize: '14px',
-            fontWeight: 900,
           },
         },
         {
-          props: { variant: 'outlined', color: 'primary', size: 'small' },
+          props: { variant: 'outlined', color: 'error' },
           style: {
-            background: 'white',
-            color: '#00A950',
-            fontSize: 12,
-            fontWeight: 900,
-            height: '26px',
-          },
-        },
-        {
-          props: { variant: 'contained', color: 'secondary', size: 'medium' },
-          style: {
-            background: '#BBBBBB',
-            color: 'white',
-            fontSize: 14,
-            fontWeight: 900,
-            height: '44px',
-            minWidth: 88,
+            background: '#FFFFFF',
+            border: '1px solid #E53F3F',
+            color: '#E53F3F',
             '&:hover': {
-              backgroundColor: '#BBBBBB',
+              backgroundColor: '#FFFFFF',
             },
+          },
+        },
+        {
+          props: { variant: 'outlined', color: 'secondary' },
+          style: {
+            background: '#FFFFFF',
+            border: '1px solid #BBBBBB',
+            color: '#BBBBBB',
+            '&:hover': {
+              backgroundColor: '#FFFFFF',
+            },
+          },
+        },
+        {
+          props: { variant: 'text' },
+          style: {
+            color: 'white',
+            fontWeight: 400,
+            height: 'auto',
+          },
+        },
+        {
+          props: { size: 'small' },
+          style: {
+            fontSize: ' 12px',
+            lineHeight: '18px',
+            height: '26px',
+            minWidth: '51px',
+          },
+        },
+        {
+          props: { size: 'medium' },
+          style: {
+            fontSize: ' 14px',
+            lineHeight: '21px',
+          },
+        },
+        {
+          props: { size: 'large' },
+          style: {
+            fontSize: '20px',
+            lineHeight: '30px',
+            height: '80px',
           },
         },
       ],
@@ -249,22 +273,26 @@ const theme = createTheme({
       },
     },
     MuiTextField: {
-      styleOverrides: {
-        root: {},
-      },
       variants: [
         {
           props: { disabled: true },
           style: {
-            backgroundColor: '#E8E8E8',
             outline: 'none',
             border: 'none',
+            '& .MuiInputBase-input': {
+              backgroundColor: '#E8E8E8',
+              overflow: 'hidden',
+            },
+            '& .MuiInputBase-root': {
+              backgroundColor: '#E8E8E8',
+              overflow: 'hidden',
+            },
           },
         },
         {
           props: { variant: 'outlined' },
           style: {
-            height: '44px',
+            minHeight: '44px',
           },
         },
       ],

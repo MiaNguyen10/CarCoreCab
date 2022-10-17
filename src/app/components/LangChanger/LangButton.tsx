@@ -7,15 +7,16 @@ interface ILangButtonProps {
   language: string
 }
 
-const StyledButton = styled(Typography)({
+export const StyledLangTypography = styled(Typography)({
   padding: '2px',
   fontSize: '20px',
   fontWeight: '400',
   cursor: 'pointer',
+  color: '#FFFFFF',
   textTransform: 'uppercase',
 })
 
-const LangButton = ({ language } : ILangButtonProps) => {
+const LangButton = ({ language }: ILangButtonProps) => {
   const { i18n } = useTranslation()
   const { currentLanguage, setLanguageState } = useLanguage()
 
@@ -25,13 +26,16 @@ const LangButton = ({ language } : ILangButtonProps) => {
   }
 
   return (
-    <StyledButton
+    <StyledLangTypography
       sx={{
         fontWeight: currentLanguage === language ? 700 : 400,
       }}
       onClick={() => setLanguage()}
-    >{ language }</StyledButton>
+    >
+      {language}
+    </StyledLangTypography>
   )
 }
 
 export default LangButton
+

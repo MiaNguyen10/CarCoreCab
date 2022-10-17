@@ -12,6 +12,16 @@ import { getUser, getUserStatus, resetUserStatus } from 'cores/reducers/user'
 import { useAppDispatch, useAppSelector } from 'cores/store/hook'
 import { getCompanyList } from 'cores/thunk/company'
 import { editUser, getUserDetail } from 'cores/thunk/user'
+import { ICompanyDetail } from 'cores/reducers/interfaces'
+
+const CompanyList = (array: ICompanyDetail[] | undefined) => {
+  return (
+    array?.map((company) => ({
+      id: company?.id ?? '',
+      name: company?.name ?? '',
+    })) ?? []
+  )
+}
 
 const EditUser = (): JSX.Element => {
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
@@ -24,14 +34,12 @@ const EditUser = (): JSX.Element => {
   const token = useAppSelector(selectState)
   const userDetail = useAppSelector(getUser)
   const companyStatus = useAppSelector(selectStatus)
-  const companyList =
-    useAppSelector(selectAllCompanies)?.map((company) => ({
-      id: company?.id ?? '',
-      name: company?.name ?? '',
-    })) ?? []
+  const allCompany = useAppSelector(selectAllCompanies)
+  const companyList = React.useMemo(() => {
+    return CompanyList(allCompany)
+  }, [allCompany])
 
   const handleFormSubmit = ({ company, firstName, lastName, role, email }: IUserFormInput): void => {
-    // eslint-disable-next-line no-console
     confirmation({}).then(async () => {
       if (token.token) {
         try {

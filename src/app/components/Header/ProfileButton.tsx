@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Menu, MenuItem } from '@mui/material'
 import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +12,7 @@ import pages from 'app/config/pages'
 const ProfileButton = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const popupState = usePopupState({
     variant: 'popover',
@@ -36,8 +38,8 @@ const ProfileButton = () => {
         <ProfileIcon />
       </Button>
       <Menu {...bindMenu(popupState)}>
-        <MenuItem onClick={handleShowProfile}>Profile</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={handleShowProfile}>{t('PROFILE_MENU_PROFILE')}</MenuItem>
+        <MenuItem onClick={handleLogout}>{t('PROFILE_MENU_LOGOUT')}</MenuItem>
       </Menu>
     </React.Fragment>
   )

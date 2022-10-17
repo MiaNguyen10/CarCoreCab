@@ -11,6 +11,7 @@ export interface ILanguage extends PlainObject {
 
 export interface ISession extends PlainObject {
   idleTime: number
+  expiredTime: number
 }
 export interface IGoogle extends PlainObject {
   host: string
@@ -68,6 +69,13 @@ export interface ICar extends PlainObject {
   stateName: string
 }
 
+export interface IConstantPath extends PlainObject {
+  path: {
+    listProvince: string
+  }
+  stateName: string
+}
+
 export interface IConfig extends PlainObject {
   language: ILanguage
   recaptcha: IRecaptcha
@@ -93,5 +101,6 @@ export interface PageUrlProps {
 }
 
 export type status = STATUS.ACTIVE | STATUS.INACTIVE | STATUS.DELETE
-export type carStatus = STATUS.PENDING | STATUS.APPROVED | STATUS.DRAFT
+export type CompanyStatus = STATUS.ACTIVE | STATUS.SUSPEND
+export type CarStatus = STATUS.PENDING | STATUS.APPROVED | STATUS.DRAFT
 

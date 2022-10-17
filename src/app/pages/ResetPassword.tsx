@@ -1,21 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Button, Container, Stack, styled, Typography } from '@mui/material'
-
 import * as yup from 'yup'
 
-import { FormInput } from 'app/components/Input'
-import { FormSubmitButton, FullScreenDialog } from 'app/components'
+import { FormSubmitButton, FullScreenDialog, LabelledInput } from 'app/components'
 import pages from 'app/config/pages'
 
 import { emailRegExp, passwordRegExp } from 'cores/utils/regexFormat'
-import { useAppDispatch, useAppSelector } from 'cores/store/hook'
+import { useAppDispatch } from 'cores/store/hook'
 import { resetPassword } from 'cores/reducers/user'
 import { backendErrorToMessage, IError } from 'cores/factories/errorFactory'
-import { selectState } from 'cores/reducers/authentication'
 
 interface IResetPassword {
   email: string
@@ -25,7 +22,7 @@ interface IResetPassword {
 
 const StyledTypo = styled(Typography)({
   marginTop: 16,
-  color: '#333333',
+  // color: '#333333',
 })
 
 const StyledButton = styled(Button)({
@@ -42,32 +39,35 @@ const ErrorTypo = styled(Typography)({
   whiteSpace: 'nowrap',
 })
 
-const schema = yup.object({
-  email: yup.string().required('Required').matches(emailRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_EMAIL'),
-  password: yup.string().required('Required').matches(passwordRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'),
-  confirmPassword: yup
-    .string()
-    .required('Required')
-    .matches(passwordRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD')
-    .oneOf([yup.ref('password'), null], 'FORGOT_PASSWORD_ERROR_PASSWORD_NOT_MATCH'),
-})
-
 const ResetPassword = () => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const currentSession = useAppSelector(selectState)
+
+  const schema = useMemo(
+    () =>
+      yup.object({
+        email: yup.string().required('Required').matches(emailRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_EMAIL'),
+        password: yup.string().required('Required').matches(passwordRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'),
+        confirmPassword: yup
+          .string()
+          .required('Required')
+          .matches(passwordRegExp, 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD')
+          .oneOf([yup.ref('password'), null], 'FORGOT_PASSWORD_ERROR_PASSWORD_NOT_MATCH'),
+      }),
+    [],
+  )
 
   const {
     handleSubmit,
-    formState: { errors: formErrors },
-    control,
+    formState: { errors: errors },
     setError,
+    register,
   } = useForm<IResetPassword>({
     mode: 'all',
     resolver: yupResolver(schema),
     defaultValues: {
-      email: currentSession.username,
+      email: 'sdf@gmail.com',
       password: '',
       confirmPassword: '',
     },
@@ -94,73 +94,52 @@ const ResetPassword = () => {
   return (
     <Container>
       <FullScreenDialog width={268} height={131} open={isSubmit} handleClose={handleCloseDialog}>
-        <StyledTypo variant="h5">{t('RESET_PASSWORD_DIALOG_PROMPT')}</StyledTypo>
+        <StyledTypo>{t('RESET_PASSWORD_DIALOG_PROMPT')}</StyledTypo>
         <StyledButton variant="contained" color="primary" onClick={handleCloseDialog}>
           {t('RESET_PASSWORD_LABEL_CLOSE')}
         </StyledButton>
       </FullScreenDialog>
-      <Stack alignItems="center" spacing={2} pt={7}>
+      <Stack alignItems="center" pt={7}>
         <Typography variant="h1">{t('RESET_PASSWORD_TITLE')}</Typography>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack pt={6} spacing={7}>
-            <Controller
-              control={control}
+          <Stack pt={6} spacing={3}>
+            <LabelledInput
+              title={`${t('FORGOT_PASSWORD_LABEL_EMAIL')}`}
               name="email"
-              render={({ field: { onChange, value } }) => (
-                <FormInput
-                  required
-                  disabled
-                  value={value}
-                  onChange={onChange}
-                  error={!!formErrors?.email}
-                  helperText={formErrors?.email?.message}
-                  inputProps={{ required: false, maxLength: 255 }}
-                  label={t('FORGOT_PASSWORD_LABEL_EMAIL')}
-                  variant="outlined"
-                />
-              )}
+              disabled
+              errors={errors}
+              register={register}
+              inputProps={{ required: false, maxLength: 255 }}
+              required
+              helperText={errors?.email?.message}
             />
-            <Controller
-              control={control}
+            <LabelledInput
+              title={`${t('FORGOT_PASSWORD_LABEL_NEW_PASSWORD')}`}
               name="password"
-              render={({ field: { onChange, value } }) => (
-                <FormInput
-                  required
-                  value={value}
-                  onChange={onChange}
-                  error={!!formErrors?.password}
-                  helperText={t(
-                    formErrors?.password?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'
-                      ? ''
-                      : formErrors?.password?.message ?? '',
-                  )}
-                  inputProps={{ required: false, maxLength: 255 }}
-                  label={t('FORGOT_PASSWORD_LABEL_NEW_PASSWORD')}
-                  variant="outlined"
-                />
+              errors={errors}
+              register={register}
+              inputProps={{ required: false, maxLength: 255 }}
+              required
+              helperText={t(
+                errors?.password?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'
+                  ? ''
+                  : errors?.password?.message ?? '',
               )}
             />
-            <Controller
-              control={control}
+            <LabelledInput
+              title={`${t('FORGOT_PASSWORD_LABEL_CONFIRM_PASSWORD')}`}
               name="confirmPassword"
-              render={({ field: { onChange, value } }) => (
-                <FormInput
-                  required
-                  value={value}
-                  onChange={onChange}
-                  error={!!formErrors?.confirmPassword}
-                  helperText={t(
-                    formErrors?.confirmPassword?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'
-                      ? ''
-                      : formErrors?.confirmPassword?.message ?? '',
-                  )}
-                  inputProps={{ required: false, maxLength: 255 }}
-                  label={t('FORGOT_PASSWORD_LABEL_CONFIRM_PASSWORD')}
-                  variant="outlined"
-                />
+              errors={errors}
+              register={register}
+              inputProps={{ required: false, maxLength: 255 }}
+              required
+              helperText={t(
+                errors?.confirmPassword?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD'
+                  ? ''
+                  : errors?.confirmPassword?.message ?? '',
               )}
             />
-            {formErrors?.password?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD' && (
+            {errors?.password?.message === 'FORGOT_PASSWORD_ERROR_INVALID_PASSWORD' && (
               <Box>
                 {t('PROFILE_ERROR_INVALID_PASSWORD')
                   .split('\n')
@@ -169,7 +148,6 @@ const ResetPassword = () => {
                   ))}
               </Box>
             )}
-
             <Stack direction="row" justifyContent="flex-end">
               <FormSubmitButton name={'RESET_PASSWORD_SAVE'} />
             </Stack>

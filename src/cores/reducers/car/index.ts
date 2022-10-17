@@ -9,7 +9,7 @@ import { PlainObject } from 'cores/utils/commonType'
 const config = Container.get(ConfigService).car
 
 const initialState: CarState = {
-  numberOfCarCase: '',
+  numberOfCarCase: 0,
   status: RequestState.IDEAL,
   cars: [],
   error: '',
@@ -22,7 +22,7 @@ const initialState: CarState = {
 }
 
 export interface CarState extends PlainObject {
-  numberOfCarCase: string
+  numberOfCarCase: number
   status: RequestState
   cars: ICarDetail[]
   error?: string

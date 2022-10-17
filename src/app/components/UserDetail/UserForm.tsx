@@ -1,17 +1,20 @@
-import React, { useCallback, useEffect } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Stack, TextField, SxProps, MenuItem, Button, Typography, CircularProgress, Backdrop } from '@mui/material'
+import { Backdrop, Button, CircularProgress, MenuItem, Stack, SxProps, TextField } from '@mui/material'
+import React, { useCallback, useEffect } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
 
 import pages from 'app/config/pages'
-import { emailRegExp, nameRegExp } from 'cores/utils/regexFormat'
+import { useSession } from 'app/middlewares/hooks/useSession'
 import { ETier, TPermission } from 'app/middlewares/PermissionProvider'
 import { selectState } from 'cores/reducers/authentication'
 import { IUserDetail } from 'cores/reducers/interfaces'
+import { useAppDispatch, useAppSelector } from 'cores/store/hook'
+import { addUser } from 'cores/thunk/user'
+import { emailRegExp, nameRegExp } from 'cores/utils/regexFormat'
 
 export enum EUserStatus {
   active = 'Active',
@@ -59,9 +62,13 @@ const makeStyles = (): {
   textFieldStyle: SxProps
 } => ({
   textFieldStyle: {
-    paddingTop: 0,
     width: '320px',
-    height: '50px',
+    '.MuiOutlinedInput-root': {
+      height: 44,
+    },
+    '.MuiSelect-select': {
+      marginTop: 1,
+    },
     '.MuiInputLabel-root': {
       zIndex: 0,
       top: '-25px',
@@ -80,7 +87,6 @@ const makeStyles = (): {
       },
     },
     '.MuiOutlinedInput-notchedOutline': {
-      maxHeight: '55px',
       legend: {
         maxWidth: 0,
       },
@@ -91,6 +97,10 @@ const makeStyles = (): {
 const UserForm = ({ userDetail, companyList, onFormSubmit, isLoading, userList }: IUserFormProps): JSX.Element => {
   const { t } = useTranslation()
   const styles = makeStyles()
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const token = useAppSelector(selectState)
+  const currentState = useSelector(selectState)
 
   const schema = yup.object({
     email: yup
@@ -121,7 +131,7 @@ const UserForm = ({ userDetail, companyList, onFormSubmit, isLoading, userList }
 
   const {
     handleSubmit,
-    formState: { errors: formErrors },
+    formState: { errors: formErrors, isValid },
     control,
     reset,
     getValues,
@@ -136,16 +146,13 @@ const UserForm = ({ userDetail, companyList, onFormSubmit, isLoading, userList }
       status: 'active',
     },
   })
-  const navigate = useNavigate()
-
-  const currentState = useSelector(selectState)
 
   const onSubmit: SubmitHandler<IUserFormInput> = (data): void => onFormSubmit(data)
 
   const getVisibleRole = useCallback((): TPermission[] => {
     switch (currentState.teir) {
       case 'admin':
-        return [ETier.COMPANY_SUPERUSER]
+        return [ETier.COMPANY_ADMIN]
       case 'superUser':
         return [ETier.COMPANY_CHECKER, ETier.COMPANY_LABELER, ETier.COMPANY_VIEWER]
       default:
@@ -164,12 +171,39 @@ const UserForm = ({ userDetail, companyList, onFormSubmit, isLoading, userList }
     })
   }, [companyList, userDetail, reset, getValues, getVisibleRole])
 
+  const handleAddUser = async () => {
+    if (token.token) {
+      await dispatch(
+        addUser({
+          token: token.token,
+          email: getValues('email'),
+          companyId: getValues('company'),
+          name: getValues('firstName'),
+          surname: getValues('lastName'),
+          userRole: getValues('role'),
+        }),
+      ).unwrap()
+    }
+  }
+
+  const handleSessionTimeout = () => {
+    if (!userDetail && isValid) {
+      handleAddUser()
+    }
+  }
+
+  const sessionTimeout = useSession(handleSessionTimeout)
+
+  useEffect(() => {
+    sessionTimeout
+  }, [sessionTimeout])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Backdrop open={isLoading} sx={{ zIndex: 9 }}>
         <CircularProgress />
       </Backdrop>
-      <Stack alignItems="flex-start" pt={6} spacing={8}>
+      <Stack alignItems="flex-start" pt={6} spacing={5}>
         <Controller
           control={control}
           name="email"
@@ -306,10 +340,10 @@ const UserForm = ({ userDetail, companyList, onFormSubmit, isLoading, userList }
             onClick={(): void => navigate(pages.userListPath)}
             disabled={isLoading}
           >
-            <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('USER_BUTTON_CANCEL')}</Typography>
+            {t('USER_BUTTON_CANCEL')}
           </Button>
-          <Button variant="contained" type="submit" disabled={isLoading}>
-            <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('USER_BUTTON_SAVE')}</Typography>
+          <Button variant="contained" disabled={isLoading} type="submit">
+            {t('USER_BUTTON_SAVE')}
           </Button>
         </Stack>
       </Stack>

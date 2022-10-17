@@ -1,8 +1,9 @@
-import * as React from 'react'
+import { Box, TextField, TextFieldProps } from '@mui/material'
 import { styled } from '@mui/system'
-import { Box, FormControl, InputLabel, TextField, TextFieldProps, Typography } from '@mui/material'
-import { useTranslation } from 'react-i18next'
+import { LabelTypo } from 'app/components'
+import * as React from 'react'
 import { FieldErrors, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 interface ILabelledInput<T> {
   name: string
@@ -13,26 +14,25 @@ interface ILabelledInput<T> {
   errors?: FieldErrors<T>
   disabled?: boolean
   label?: string
+  required?: boolean
 }
 
-const StyleInput = styled(TextField)(({ theme }) => ({
-  'label + &': {
-    marginTop: theme.spacing(6),
-  },
+export const StyleInput = styled(TextField)(() => ({
   '& .MuiInputBase-input': {
     borderRadius: 3,
     position: 'relative',
     fontSize: 16,
-    height: 44,
     width: 300,
     padding: 0,
+    height: 44,
     paddingLeft: 20,
   },
+  '& .MuiSelect-select': {
+    height: 33,
+    width: 268,
+    paddingTop: '11px',
+  },
 }))
-
-const RequiredMark = () => {
-  return <span style={{ color: 'red' }}>*</span>
-}
 
 const LabelledInput = <T extends FieldValues>({
   errors,
@@ -40,6 +40,8 @@ const LabelledInput = <T extends FieldValues>({
   title,
   register,
   rules,
+  required,
+  children,
   ...rest
 }: ILabelledInput<T> & TextFieldProps) => {
   const { t } = useTranslation()
@@ -48,23 +50,18 @@ const LabelledInput = <T extends FieldValues>({
 
   return (
     <Box>
-      <FormControl variant="standard">
-        <InputLabel htmlFor={`labelled-input-${name}`}>
-          <Typography variant="h4">
-            {title} {rules?.required && <RequiredMark />}
-          </Typography>
-        </InputLabel>
-        <StyleInput
-          id={`labelled-input-${name}`}
-          error={!!error}
-          helperText={error ? t(errorMessage) : ' '}
-          {...(register && register(name as Path<T>, rules))}
-          {...rest}
-        />
-      </FormControl>
+      <LabelTypo htmlFor={`labelled-input-${name}`} desc={title} required={required || !!rules?.required} />
+      <StyleInput
+        id={`labelled-input-${name}`}
+        error={!!error}
+        helperText={error && t(errorMessage)}
+        {...(register && register(name as Path<T>, rules))}
+        {...rest}
+      >
+        {children}
+      </StyleInput>
     </Box>
   )
 }
 
 export default LabelledInput
-

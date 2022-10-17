@@ -129,7 +129,7 @@ const CarLabelStep3 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
           sx={{ backgroundColor: '#F7F7F7', width: 873, height: watch('image') ? 'auto' : 540 }}
         >
           {watch('image')?.url ? (
-            <LabelImageHolder isUploadedImage={!!watch('image')} onSetDraw={() => setIsDraw(!isDraw)}>
+            <LabelImageHolder onSetDraw={() => setIsDraw(!isDraw)}>
               <Controller
                 control={control}
                 name="gearPosition"
@@ -139,6 +139,7 @@ const CarLabelStep3 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                     width={853}
                     imageWidth={getValues('image').width}
                     imageHeight={getValues('image').height}
+                    defaultValue={carInformation?.console?.gearPosition}
                     onChange={({ x, y, width, height }: IAnnotations): void => {
                       onChange({ x, y, width, height })
                     }}
@@ -240,10 +241,10 @@ const CarLabelStep3 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
       </Stack>
       <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ width: '1273px' }}>
         <Button variant="contained" color="secondary" onClick={() => onChangeTab(3)}>
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SKIP_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SKIP_BUTTON')}
         </Button>
         <Button variant="contained" type="submit">
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SAVE_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SAVE_BUTTON')}
         </Button>
       </Stack>
     </Stack>

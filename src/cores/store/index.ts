@@ -1,5 +1,5 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
-import { AuthReducer, CarReducer, CompanyReducer, UserReducer } from 'cores/reducers'
+import { AuthReducer, CarReducer, CompanyReducer, ConstantReducer, UserReducer } from 'cores/reducers'
 
 export const store = configureStore({
   reducer: {
@@ -7,6 +7,7 @@ export const store = configureStore({
     user: UserReducer.reducers,
     company: CompanyReducer.reducers,
     car: CarReducer.reducers,
+    constant: ConstantReducer.reducers,
   },
 })
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import { Stage, Layer, Rect } from 'react-konva'
 import Konva from 'konva'
@@ -8,7 +8,8 @@ interface IDrawAnnotationProps {
   stageHeight: number
   imageWidth: number
   imageHeight: number
-  isDraw: boolean | boolean[]
+  isDraw: boolean
+  defaultValue?: IAnnotations
   onChange?: (annotations: IAnnotations) => void
 }
 
@@ -17,7 +18,6 @@ export interface IAnnotations {
   y: number
   width: number
   height: number
-  key: number
 }
 
 const DrawAnnotation = ({
@@ -26,28 +26,13 @@ const DrawAnnotation = ({
   imageWidth,
   imageHeight,
   isDraw,
+  defaultValue,
   onChange,
 }: IDrawAnnotationProps): JSX.Element => {
-  const getDefaultAnnotation = () => {
-    if(typeof isDraw === 'object') {
-      return (isDraw as boolean[]).map((_data, index) => (
-        {
-          x: 0,
-          y: 0,
-          width: 0,
-          height: 0,
-          key: index + 1,
-        }
-      ))
-    }
-
-    return []
-  }
-
-  const [annotations, setAnnotations] = useState<IAnnotations[]>(getDefaultAnnotation())
+  const [annotations, setAnnotations] = useState<IAnnotations[]>([])
   const [newAnnotation, setNewAnnotation] = useState<IAnnotations[]>([])
 
-  const handleCorrectPosition = ({ x, y, width, height, key }: IAnnotations): void => {
+  const handleCorrectPosition = ({ x, y, width, height }: IAnnotations): void => {
     if(onChange) {
         const xPosition = (x / stageWidth) * imageWidth
         const yPosition = (y / stageHeight) * imageHeight
@@ -58,10 +43,23 @@ const DrawAnnotation = ({
             y: actualHeight >= 0 ? yPosition : yPosition + actualHeight,
             width: Math.abs(actualWidth),
             height: Math.abs(actualHeight),
-            key,
         })
       }
   }
+
+  const handleOnImagePosition = ({
+    x: xPosition,
+    y: yPosition,
+    width: actualWidth,
+    height: actualHeight,
+  }: IAnnotations): IAnnotations => (
+    {
+      x: xPosition / imageWidth * stageWidth,
+      y: yPosition / imageHeight * stageHeight,
+      width: actualWidth / imageWidth * stageWidth,
+      height: actualHeight / imageHeight * stageHeight,
+    }
+  )
 
   const handleMouseDown = (event: Konva.KonvaEventObject<MouseEvent>) => {
     if (newAnnotation.length === 0) {
@@ -72,7 +70,6 @@ const DrawAnnotation = ({
           y: coordinate?.y ?? 0,
           width: 0,
           height: 0,
-          key: 0,
         },
       ])
     }
@@ -88,19 +85,9 @@ const DrawAnnotation = ({
         y: sy,
         width: (coordinate?.x ?? 0) - sx,
         height: (coordinate?.y ?? 0) - sy,
-        key: typeof isDraw === 'object' ? (isDraw as unknown as boolean[]).indexOf(true) + 1 : annotations.length + 1,
       }
-      if(typeof isDraw === 'object') {
-        if(annotations.length >= (isDraw as boolean[]).length) {
-          annotations.splice((isDraw as boolean[]).indexOf(true), 1)
-        }
-        annotations.splice((isDraw as boolean[]).indexOf(true), 0, annotationToAdd)
-        setNewAnnotation([])
-        setAnnotations(annotations)
-      } else {
-        setNewAnnotation([])
-        setAnnotations([annotationToAdd])
-      }
+      setNewAnnotation([])
+      setAnnotations([annotationToAdd])
       handleCorrectPosition(annotationToAdd)
     }
   }
@@ -116,16 +103,26 @@ const DrawAnnotation = ({
           y: sy,
           width: (coordinate?.x ?? 0) - sx,
           height: (coordinate?.y ?? 0) - sy,
-          key: 1,
         },
       ])
     }
   }
 
+  useEffect(() => {
+    if(defaultValue) {
+      setAnnotations([handleOnImagePosition(defaultValue)])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const annotationsToDraw = [...annotations, ...newAnnotation]
 
-return (
-    <Box sx={{ cursor: isDraw ? 'crosshair' : 'unset' }}>
+  return (
+    <Box sx={{
+        cursor: isDraw ? 'crosshair' : 'unset',
+        zIndex: isDraw ? 999 : 'auto',
+      }}
+    >
         <Stage
             onMouseDown={isDraw ? handleMouseDown : undefined}
             onMouseUp={isDraw ? handleMouseUp : undefined}
@@ -134,19 +131,17 @@ return (
             height={stageHeight}
         >
             <Layer>
-                {annotationsToDraw.map((value) => {
-                return (
-                    <Rect
-                        key={value.key}
-                        x={value.x}
-                        y={value.y}
-                        width={value.width}
-                        height={value.height}
-                        fill="transparent"
-                        stroke="red"
-                    />
-                )
-                })}
+                {annotationsToDraw.map((value) => (
+                  <Rect
+                    key={value.x}
+                    x={value.x}
+                    y={value.y}
+                    width={value.width}
+                    height={value.height}
+                    fill="transparent"
+                    stroke="red"
+                  />
+                ))}
             </Layer>
         </Stage>
     </Box>
@@ -154,3 +149,4 @@ return (
 }
 
 export default DrawAnnotation
+

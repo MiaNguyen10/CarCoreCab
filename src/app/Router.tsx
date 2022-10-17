@@ -1,17 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
 
 import { Layout } from 'app/components'
 import pages from 'app/config/pages'
+import { ETier, RestrictedPermission } from 'app/middlewares/PermissionProvider'
 import ProtectedRoutes from 'app/middlewares/ProtectedRoutes'
-import { RestrictedPermission, ETier } from 'app/middlewares/PermissionProvider'
+import { useSession } from './middlewares/hooks/useSession'
 import {
   AddUser,
+  CarList,
+  CompanyRender,
   CreateCar,
   EditCar,
-  CarListChecker,
-  CarRender,
-  CompanyRender,
   EditUser,
   ExpiredLink,
   ForgotPassword,
@@ -23,6 +23,12 @@ import {
 } from './pages'
 
 const Router = () => {
+  const sessionTimeout = useSession()
+
+  useEffect(() => {
+    sessionTimeout
+  }, [sessionTimeout])
+
   return (
     <Routes>
       <Route element={<Layout />}>
@@ -36,7 +42,7 @@ const Router = () => {
               <RestrictedPermission
                 permission={[
                   ETier.KBANK_ADMIN,
-                  ETier.COMPANY_SUPERUSER,
+                  ETier.COMPANY_ADMIN,
                   ETier.COMPANY_CHECKER,
                   ETier.COMPANY_LABELER,
                   ETier.COMPANY_VIEWER,
@@ -44,7 +50,7 @@ const Router = () => {
               />
             }
           >
-            <Route element={<RestrictedPermission permission={[ETier.KBANK_ADMIN, ETier.COMPANY_SUPERUSER]} />}>
+            <Route element={<RestrictedPermission permission={[ETier.KBANK_ADMIN, ETier.COMPANY_ADMIN]} />}>
               <Route path={`${pages.companyListPath}`} element={<CompanyRender />} />
               <Route element={<RestrictedPermission permission={[ETier.KBANK_ADMIN]} />}>
                 <Route path={`${pages.companyEditPath}`} element={<CompanyRender />} />
@@ -55,14 +61,13 @@ const Router = () => {
               <Route path={`${pages.userAddPath}`} element={<AddUser />} />
               <Route path={`${pages.userEditPath}`} element={<EditUser />} />
             </Route>
-            <Route path={`${pages.carListPath}`} element={<CarRender />} />
-            <Route path={`${pages.carListPathChecker}`} element={<CarListChecker />} />
+            <Route path={`${pages.carListPath}`} element={<CarList />} />
           </Route>
           <Route path={`/${pages.profilePath}`} element={<Profile />} />
           <Route
             element={
               <RestrictedPermission
-                permission={[ETier.COMPANY_SUPERUSER, ETier.COMPANY_CHECKER, ETier.COMPANY_LABELER]}
+                permission={[ETier.COMPANY_ADMIN, ETier.COMPANY_CHECKER, ETier.COMPANY_LABELER]}
               />
             }
           >
@@ -70,7 +75,6 @@ const Router = () => {
           </Route>
           <Route path={`/${pages.carrEditPath}`} element={<EditCar />} />
         </Route>
-
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Routes>

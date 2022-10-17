@@ -88,7 +88,7 @@ export class CarService extends BackendService {
 
   public async editCar(input: IEditCarInput): Promise<unknown> {
     const response = await this.client.put(this.#config.path.editCar, {
-      header: { ...super.header },
+      header: { ...this.header },
       ...input,
     })
 
@@ -97,7 +97,7 @@ export class CarService extends BackendService {
 
   public async getCarDetail(input: IGetCarDetailInput): Promise<IGetCarDetailResponse> {
     const response = await this.client.post(this.#config.path.singleCar, {
-      header: { ...super.header },
+      header: { ...this.header },
       ...input,
     })
 

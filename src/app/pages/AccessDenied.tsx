@@ -10,15 +10,15 @@ const AccessDenied = () => {
   return (
     <CenterPage>
       <CenterBox>
-        <Typography sx={{ fontSize: 200, fontWeight: 400, color: '#00A950' }}>{t('ACCES_DENIED_CODE')}</Typography>
+        <Typography sx={{ fontSize: 200, fontWeight: 400, color: '#00A950' }}>{t('ACCESS_DENIED_CODE')}</Typography>
       </CenterBox>
 
       <CenterBox>
-        <Typography sx={{ fontSize: 60, fontWeight: 400, color: '#00A950' }}>{t('ACCES_DENIED_TITLE')}</Typography>
+        <Typography sx={{ fontSize: 60, fontWeight: 400, color: '#00A950' }}>{t('ACCESS_DENIED_TITLE')}</Typography>
       </CenterBox>
 
       <CenterBox>
-        <Typography sx={{ fontSize: 32, fontWeight: 600 }}>{t('ACCES_DENIED_DESCRIPTION')}</Typography>
+        <Typography sx={{ fontSize: 32, fontWeight: 600 }}>{t('ACCESS_DENIED_DESCRIPTION')}</Typography>
       </CenterBox>
     </CenterPage>
   )

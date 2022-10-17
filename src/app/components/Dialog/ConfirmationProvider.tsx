@@ -19,7 +19,7 @@ export interface ConfirmationProviderProps extends ConfirmDialogProps, IChildren
   handleClose?: VoidFunction
 }
 
-const ConfirmationProvider = ({ btnClose, btnSubmit, desc, children }: ConfirmationProviderProps) => {
+const ConfirmationProvider = ({ btnClose, btnSubmit, desc, width, height, children }: ConfirmationProviderProps) => {
   const [confirmationState, setConfirmationState] = React.useState<ConfirmationOptions | null>(null)
   const awaitingPromiseRef = React.useRef<{
     resolve: () => void
@@ -53,7 +53,7 @@ const ConfirmationProvider = ({ btnClose, btnSubmit, desc, children }: Confirmat
   return (
     <>
       <ConfirmationContext.Provider value={openConfirmation}>{children}</ConfirmationContext.Provider>
-      <FullScreenDialog open={Boolean(confirmationState)} width={292} height={107} handleClose={() => handleClose}>
+      <FullScreenDialog open={Boolean(confirmationState)} width={width} height={height} handleClose={() => handleClose}>
         <ConfirmDialog
           desc={desc}
           btnClose={btnClose}

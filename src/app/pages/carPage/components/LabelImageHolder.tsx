@@ -6,11 +6,10 @@ import Crosshair from 'app/assets/icons/Crosshair.png'
 
 export interface ILabelImageHolderProps {
   onSetDraw?: () => void
-  isUploadedImage?: boolean
   children: JSX.Element
 }
 
-const LabelImageHolder = ({ isUploadedImage, onSetDraw, children }: ILabelImageHolderProps): JSX.Element => {
+const LabelImageHolder = ({ onSetDraw, children }: ILabelImageHolderProps): JSX.Element => {
   const [isPan, setIsPan] = useState(true)
 
   return (
@@ -33,7 +32,7 @@ const LabelImageHolder = ({ isUploadedImage, onSetDraw, children }: ILabelImageH
                     width: '32px',
                     height: '32px',
                     backgroundImage: `url(${Crosshair})`,
-                    cursor: isUploadedImage ? 'pointer' : 'not-allowed',
+                    cursor: 'pointer',
                   }}
                 />
               </IconButton>

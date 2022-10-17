@@ -4,8 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import EditIcon from '@mui/icons-material/Edit'
 import { Box, Button, Grid, InputAdornment, styled, TextField, Typography } from '@mui/material'
 import SearchIcon from 'app/assets/icons/SearchIcon'
-import { AddButton, HeadCellProps, ListTypo, MenuAction, Order, SelectStatus, TableSort } from 'app/components'
-import { DefaultLimit, STATUS } from 'app/config/Constant'
+import { AddButton, HeadCellProps, ListTypo, MenuAction, Order, OptionSelect, TableSort } from 'app/components'
+import { DefaultLimit, STATUS, SelectAllCompanyStatus } from 'app/config/Constant'
 import { status } from 'app/config/interfaces'
 import pages from 'app/config/pages'
 import { selectState } from 'cores/reducers/authentication'
@@ -125,11 +125,11 @@ const CompanyList = () => {
       const actionSubmenu: any = []
 
       actionSubmenu.push({
-        icon: <RestrictedPermission permission={[
-          ETier.KBANK_ADMIN,
-        ]}>
-          <EditIcon fontSize="small" sx={{ color: '#0C5E96' }} />
-        </RestrictedPermission>,
+        icon: (
+          <RestrictedPermission permission={[ETier.KBANK_ADMIN]}>
+            <EditIcon fontSize="small" sx={{ color: '#0C5E96' }} />
+          </RestrictedPermission>
+        ),
         link: companyId
           ? () => {
               navigate(`${pages.companyPath}/${companyId}/edit`)
@@ -219,7 +219,13 @@ const CompanyList = () => {
                   name="status"
                   control={control}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <SelectStatus value={value} onChange={onChange} error={error} width={14} />
+                    <OptionSelect
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                      width={320}
+                      option={SelectAllCompanyStatus}
+                    />
                   )}
                 />
               </div>
@@ -236,9 +242,7 @@ const CompanyList = () => {
       </FormProvider>
       <br />
 
-      <RestrictedPermission permission={[
-        ETier.KBANK_ADMIN,
-      ]}>
+      <RestrictedPermission permission={[ETier.KBANK_ADMIN]}>
         <AddButton desc={t('COMPANY_LIST_ADD_COMPANY')} url={`${pages.companyAddPath}`} />
       </RestrictedPermission>
       <TableSort

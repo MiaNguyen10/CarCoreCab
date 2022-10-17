@@ -8,23 +8,24 @@ import { AccessDenied } from 'app/pages'
 import { selectState } from 'cores/reducers/authentication'
 
 interface IRestrictedRoutesProps {
-    permission: TPermission[]
-    children?: JSX.Element
+  permission: TPermission[]
+  children?: JSX.Element
 }
 
 const RestrictedPermission: React.FunctionComponent<IRestrictedRoutesProps> = ({ permission, children }) => {
-    const { isAllowedTo } = useContext(PermissionContext)
-    const currentState = useSelector(selectState)
+  const { isAllowedTo } = useContext(PermissionContext)
+  const currentState = useSelector(selectState)
 
-    if(isAllowedTo(currentState.teir as TPermission, permission)) {
-        if(children) {
-            return <>{children}</>
-        }
-
-        return <Outlet />
+  if (isAllowedTo(currentState.teir as TPermission, permission)) {
+    if (children) {
+      return <>{children}</>
     }
 
-    return children ? null : <AccessDenied />
+    return <Outlet />
+  }
+
+  return children ? null : <AccessDenied />
 }
 
 export default RestrictedPermission
+

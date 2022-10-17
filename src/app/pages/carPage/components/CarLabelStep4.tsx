@@ -4,7 +4,7 @@ import Crosshair from 'app/assets/icons/Crosshair.png'
 import NoImage from 'app/assets/icons/NoImage'
 import DashboardImageTooltip from 'app/assets/images/DashboardImageTooltip.png'
 import { LabelTypo } from 'app/components'
-import { DrawContainer, IAnnotations } from 'app/components/DrawAnnotation'
+import { IAnnotations, MultiDrawContainer } from 'app/components/DrawAnnotation'
 import { IImageSize } from 'app/pages/carPage/components/CarLabelStep3'
 import SampleImageTooltip from 'app/pages/carPage/components/SampleImageTooltip'
 import LabelImageHolder from 'app/pages/carPage/components/LabelImageHolder'
@@ -58,11 +58,14 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
     mode: 'all',
     resolver: yupResolver(schema),
     defaultValues: {
+      image: carInformation?.dashboard?.image,
       mileageODO: {
-        value: '',
+        value: carInformation?.dashboard?.mileageODO?.value ?? '',
+        position: carInformation?.dashboard?.mileageODO?.position,
       },
       mileageTrip: {
-        value: '',
+        value: carInformation?.dashboard?.mileageTrip?.value ?? '',
+        position: carInformation?.dashboard?.mileageTrip?.position,
       },
     },
   })
@@ -113,7 +116,7 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
           sx={{ backgroundColor: '#F7F7F7', width: 873, height: watch('image') ? 'auto' : 540 }}
         >
           {watch('image')?.url ? (
-            <LabelImageHolder isUploadedImage={!!watch('image')}>
+            <LabelImageHolder>
               <Controller
                 control={control}
                 name="mileageODO.position"
@@ -122,22 +125,31 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                     control={control}
                     name="mileageTrip.position"
                     render={({ field: { onChange: onChangeTrip } }): JSX.Element => (
-                      <DrawContainer
-                        isDraw={[isDrawODO, isDrawTrip]}
+                      <MultiDrawContainer
                         width={853}
                         imageWidth={getValues('image').width}
                         imageHeight={getValues('image').height}
-                        onChange={({ x, y, width, height }: IAnnotations): void => {
-                          if (isDrawODO) {
-                            onChangeODO({ x, y, width, height })
-                          }
-                          if (isDrawTrip) {
-                            onChangeTrip({ x, y, width, height })
-                          }
-                        }}
+                        drawObject={[
+                          {
+                            key: 'odo',
+                            isDraw: isDrawODO,
+                            defaultValue: carInformation?.dashboard?.mileageODO?.position,
+                            onChange: ({ x, y, width, height }: IAnnotations): void => {
+                              onChangeODO({ x, y, width, height })
+                            },
+                          },
+                          {
+                            key: 'trip',
+                            isDraw: isDrawTrip,
+                            defaultValue: carInformation?.dashboard?.mileageTrip?.position,
+                            onChange: ({ x, y, width, height }: IAnnotations): void => {
+                              onChangeTrip({ x, y, width, height })
+                            },
+                          },
+                        ]}
                       >
                         <Box component="img" alt="background" src={watch('image').url} />
-                      </DrawContainer>
+                      </MultiDrawContainer>
                     )}
                   />
                 )}
@@ -154,6 +166,8 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                 width: '32px',
                 height: '32px',
                 marginTop: 4,
+                background: isDrawODO ? '#e1e0e0' : 'none',
+                borderRadius: '10px',
                 backgroundImage: `url(${Crosshair})`,
                 cursor: watch('image') ? 'pointer' : 'not-allowed',
               }}
@@ -165,7 +179,7 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
               }}
             />
             <div>
-              <LabelTypo desc={`${t('CAR_CAR_LABELING_STEP_4_MILEAGE_ODO')}`} />
+              <LabelTypo desc={`${t('CAR_CAR_LABELING_STEP_4_MILEAGE_ODO')}`} required />
               <Controller
                 control={control}
                 name="mileageODO.value"
@@ -194,6 +208,8 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                 width: '32px',
                 height: '32px',
                 marginTop: 4,
+                background: isDrawTrip ? '#e1e0e0' : 'none',
+                borderRadius: '10px',
                 backgroundImage: `url(${Crosshair})`,
                 cursor: watch('image') ? 'pointer' : 'not-allowed',
               }}
@@ -205,9 +221,7 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
               }}
             />
             <div>
-              <Typography variant="h4" sx={{ marginBottom: '5px' }}>
-                {t('CAR_CAR_LABELING_STEP_4_MILEAGE_TRIP')}
-              </Typography>
+              <LabelTypo desc={`${t('CAR_CAR_LABELING_STEP_4_MILEAGE_TRIP')}`} />
               <Controller
                 control={control}
                 name="mileageTrip.value"
@@ -279,10 +293,10 @@ const CarLabelStep4 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
       </Stack>
       <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ width: '1273px' }}>
         <Button variant="contained" color="secondary" onClick={() => onChangeTab(4)}>
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SKIP_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SKIP_BUTTON')}
         </Button>
         <Button variant="contained" type="submit">
-          <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SAVE_BUTTON')}</Typography>
+          {t('CAR_CAR_LABELING_SAVE_BUTTON')}
         </Button>
       </Stack>
     </Stack>

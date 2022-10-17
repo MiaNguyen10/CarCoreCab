@@ -1,11 +1,5 @@
-import { Button, DialogContent, DialogContentText, Stack, styled } from '@mui/material'
+import { Button, DialogContent, DialogContentText, Stack } from '@mui/material'
 import React from 'react'
-
-const ButtonDialogStyled = styled(Button)({
-  maxWidth: 56,
-  maxHeight: 26,
-  borderRadius: 2,
-})
 
 export interface ConfirmDialogProps {
   handleSubmit?: (event: React.MouseEvent<HTMLButtonElement>) => void | any
@@ -24,12 +18,12 @@ const ConfirmDialog = ({ handleClose, desc, btnClose, btnSubmit, handleSubmit }:
         </DialogContentText>
       </DialogContent>
       <Stack direction="row" justifyContent="center" alignItems="center" spacing={1} marginTop={'6px'}>
-        <ButtonDialogStyled onClick={handleClose} variant="outlined" color="primary" size="small">
+        <Button onClick={handleClose} variant="outlined" size="small">
           {btnClose}
-        </ButtonDialogStyled>
-        <ButtonDialogStyled onClick={handleSubmit} variant="contained" color="primary" size="small">
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" size="small">
           {btnSubmit}
-        </ButtonDialogStyled>
+        </Button>
       </Stack>
     </>
   )

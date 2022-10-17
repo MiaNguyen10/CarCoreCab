@@ -1,6 +1,6 @@
 export { default as AddCarButton } from './AddCarButton'
 export { default as AddCarPopup } from './AddCarPopup'
-export { default as CarFormList } from './CarFormList'
+export { default as SearchCarListForm } from './SearchCarListForm'
 export { default as FormRegister } from './FormRegister'
 export { default as ImageHolder } from './ImageHolder'
 export { default as CarLabel } from './CarLabel'

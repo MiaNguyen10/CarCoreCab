@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 import { Box, Button, IconButton, SelectChangeEvent, styled, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import Crosshair from 'app/assets/icons/Crosshair.png'
-import { LabelTypo, SearchSelect, SelectColor, TextFieldFill } from 'app/components'
+import { LabelledInput, LabelTypo, SearchSelect, SelectColor } from 'app/components'
 import { DrawContainer, IAnnotations } from 'app/components/DrawAnnotation'
 import { Province } from 'app/config/Data'
 import { IImageSize } from 'app/pages/carPage/components/CarLabelStep3'
@@ -76,7 +76,7 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
     formState: { errors: formErrors },
     control,
     getValues,
-    watch,
+    register,
   } = useForm<ICarLabelStep2Input>({
     mode: 'all',
     resolver: yupResolver(schema),
@@ -157,7 +157,7 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
           name="carPhotos"
           render={(): JSX.Element => (
             <>
-              <Button variant="outlined" color="primary" component="label">
+              <Button variant="outlined" component="label">
                 {t('CAR_CAR_LABELING_ADD_IMAGE')}
                 <input
                   onChange={(event) => {
@@ -189,7 +189,7 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
         />
         <Stack direction="row" spacing={2} sx={{ margin: '20px 70px' }}>
           <div>
-            <LabelTypo desc={`${t('CAR_CAR_LABELING_COLOR')}`} />
+            <LabelTypo desc={`${t('CAR_CAR_LABELING_COLOR')}`} required />
             <Controller
               name="color"
               control={control}
@@ -205,18 +205,13 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
             />
             {formErrors.color && <Typography variant="subtitle1">{formErrors.color.message}</Typography>}
           </div>
-          <div>
-            <Typography variant="h4" sx={{ marginBottom: '5px' }}>
-              {t('CAR_CAR_LABELING_OTHER_COLOR')}
-            </Typography>
-            <Controller
-              name="otherColor"
-              control={control}
-              render={({ field: { onChange, value }, fieldState: { error } }) => (
-                <TextFieldFill value={value} onChange={onChange} error={error} width={100} />
-              )}
-            />
-          </div>
+          <LabelledInput
+            title={`${t('CAR_CAR_LABELING_OTHER_COLOR')}`}
+            name="otherColor"
+            errors={formErrors}
+            register={register}
+            sx={{ width: 100 }}
+          />
         </Stack>
         {fields.map((file, index) => {
           return (
@@ -227,10 +222,7 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                 </IconButton>
                 <Stack direction="row" spacing={2} sx={{ marginTop: 7 }}>
                   <Stack direction="column" spacing={2} sx={{ margin: '-50px 24px' }}>
-                    <LabelImageHolder
-                      isUploadedImage={!!watch(`carPhotos.${index}.image`)}
-                      onSetDraw={() => setIsDraw(!isDraw)}
-                    >
+                    <LabelImageHolder onSetDraw={() => setIsDraw(!isDraw)}>
                       <Controller
                         control={control}
                         name={`carPhotos.${index}.licensePlate.position`}
@@ -289,15 +281,12 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
                       viewValue[index]?.angle === 'CAR_CAR_LABELING_VIEW_REAR_LEFT' ||
                       viewValue[index]?.angle === 'CAR_CAR_LABELING_VIEW_REAR_RIGHT') ? (
                       <Stack direction="column" spacing={1} sx={{ paddingLeft: 12 }}>
-                        <Typography variant="h4" sx={{ marginBottom: '5px' }}>
-                          {t('CAR_CAR_LABELING_LICENSE_PLATE_NO')}
-                        </Typography>
-                        <Controller
+                        <LabelledInput
+                          title={`${t('CAR_CAR_LABELING_LICENSE_PLATE_NO')}`}
                           name={`carPhotos.${index}.licensePlate.licensePlateNo`}
-                          control={control}
-                          render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <TextFieldFill value={value} onChange={onChange} error={error} width={180} />
-                          )}
+                          errors={formErrors}
+                          register={register}
+                          sx={{ width: 180 }}
                         />
                         <Typography variant="h4" sx={{ marginBottom: '5px' }}>
                           {t('CAR_CAR_LABELING_PROVINCE')}
@@ -324,10 +313,10 @@ const CarLabelStep2 = ({ carInformation, onFormSubmit, onChangeTab }: ICarLabelS
         )}
         <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ width: '1273px' }}>
           <Button variant="contained" color="secondary" onClick={() => onChangeTab(2)}>
-            <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SKIP_BUTTON')}</Typography>
+            {t('CAR_CAR_LABELING_SKIP_BUTTON')}
           </Button>
           <Button variant="contained" type="submit">
-            <Typography sx={{ fontWeight: 900, fontSize: '14px' }}>{t('CAR_CAR_LABELING_SAVE_BUTTON')}</Typography>
+            {t('CAR_CAR_LABELING_SAVE_BUTTON')}
           </Button>
         </Stack>
       </Stack>

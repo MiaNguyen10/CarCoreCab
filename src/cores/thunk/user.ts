@@ -6,11 +6,30 @@ import Container from 'typedi'
 
 export const getUserList = createAsyncThunk('user/getUserList', async (token: string) => {
   const userService = Container.get(UserService)
-  const response = await userService.fetchUser(token, STATUS.ACTIVE)
+  const { users } = await userService.fetchUser(token, STATUS.ACTIVE)
 
-  const { companies } = response
+  const transformedResponse = users.map((user, index) => ({
+    no: index + 1,
+    id: user?.id ?? '',
+    email: user?.email ?? '',
+    name: {
+      firstName: user?.name ?? '',
+      lastName: user?.surname ?? '',
+    },
+    company: user?.companyId ?? '',
+    role: user?.role ?? '',
+    status: user?.status ?? '',
+    createBy: {
+      by: user?.createBy ?? '',
+      date: user?.createDt ?? '',
+    },
+    editBy: {
+      by: user?.lastEditBy ?? '',
+      date: user?.lastEditDt ?? '',
+    },
+  }))
 
-  return companies
+  return transformedResponse
 })
 
 export const addUser = createAsyncThunk('user/addUser', async (inputCreate: ICreateUserInput) => {

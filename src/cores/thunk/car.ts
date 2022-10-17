@@ -21,9 +21,15 @@ export const getCarNumber = createAsyncThunk('car/getCarNumber', async (inputCou
 
 export const getCarList = createAsyncThunk('car/getCarList', async (inputCarList: ICarListInput) => {
   const carService = Container.get(CarService)
-  const response = await carService.fetchCar({ ...inputCarList })
+  const { cars } = await carService.fetchCar({ ...inputCarList })
+  const transformedResponse = {
+    cars: cars.map((car, index) => ({
+      no: index + 1,
+      ...car,
+    })),
+  }
 
-  return response
+  return transformedResponse
 })
 
 export const addCar = createAsyncThunk('car/addCar', async (input: ICreateCarInput) => {

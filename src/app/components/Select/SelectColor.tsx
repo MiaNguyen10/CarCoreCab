@@ -23,12 +23,14 @@ interface SelectColorProps {
   handleChange: (event: SelectChangeEvent<string[]>) => void
   onChange: (e: SelectChangeEvent<string[]>) => void
   handleDelete: (e: React.MouseEvent, value: string) => void
+  disabled?: boolean
 }
 
-const SelectColor = ({ colorChecked, handleChange, onChange, handleDelete, error }: SelectColorProps) => {
+const SelectColor = ({ colorChecked, handleChange, onChange, handleDelete, error, disabled }: SelectColorProps) => {
   return (
     <Select
       multiple
+      disabled={disabled}
       value={colorChecked}
       error={!!error}
       onChange={(e) => {
@@ -59,6 +61,7 @@ const SelectColor = ({ colorChecked, handleChange, onChange, handleDelete, error
               key={value}
               label={value}
               clickable
+              disabled={disabled}
               deleteIcon={<ClearIcon onMouseDown={(event) => event.stopPropagation()} fontSize="small" />}
               onDelete={(e) => handleDelete(e, value)}
             />

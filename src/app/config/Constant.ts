@@ -11,6 +11,17 @@ export const STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
   DRAFT: 'draft',
+  SUSPEND: 'suspend',
+}
+
+export enum EStatus {
+  active = 'Active',
+  inactive = 'Inactive',
+  delete = 'Delete',
+  all = 'All',
+  pending = 'Pending',
+  approved = 'Approved',
+  draft = 'Draft',
 }
 
 export const SelectStatusTag = {
@@ -21,6 +32,7 @@ export const SelectStatusTag = {
   [STATUS.PENDING]: { text: 'STATUS_PENDING' },
   [STATUS.DRAFT]: { text: 'STATUS_DRAFT' },
   [STATUS.APPROVED]: { text: 'STATUS_APPROVED' },
+  [STATUS.SUSPEND]: { text: 'STATUS_SUSPEND' },
 }
 
 export const SelectAddStatus = [
@@ -66,4 +78,27 @@ export const SelectAllCarStatus = [
     value: STATUS.ALL,
   },
 ].concat(SelectCarStatus)
+
+export const SelectCompanyStatus = [
+  {
+    name: SelectStatusTag[STATUS.ACTIVE]?.text,
+    value: STATUS.ACTIVE,
+  },
+  {
+    name: SelectStatusTag[STATUS.SUSPEND]?.text,
+    value: STATUS.SUSPEND,
+  },
+]
+
+export const SelectAllCompanyStatus = [
+  {
+    name: SelectStatusTag[STATUS.ALL]?.text,
+    value: STATUS.ALL,
+  },
+].concat(SelectCompanyStatus)
+
+export const dateFormats = {
+  year: 'BBBB',
+  monthAndYear: 'MMMM BBBB',
+}
 

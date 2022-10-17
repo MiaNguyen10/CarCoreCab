@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 
 import Container from 'typedi'
 
-import { Box, Link, styled } from '@mui/material'
+import { Box, Link, Stack, styled } from '@mui/material'
 
 import { CenterPage, Recaptcha, LabelledInput } from 'app/components'
 import pages from 'app/config/pages'
@@ -85,33 +85,36 @@ const Login = () => {
     <CenterPage>
       <FormHeader name="LOGIN_TITLE" />
       <form onSubmit={handleSubmit(submitHandler)}>
-        <LabelledInput
-          title="Email"
-          name="email"
-          errors={errors}
-          register={register}
-          rules={{
-            required: 'LOGIN_ERROR_REQUIRED',
-            pattern: {
-              value: emailRegExp,
-              message: 'LOGIN_ERROR_INVALID_EMAIL',
-            },
-          }}
-        />
-        <LabelledInput
-          title="Password"
-          name="password"
-          type="password"
-          errors={errors}
-          register={register}
-          rules={{
-            required: 'LOGIN_ERROR_REQUIRED',
-            pattern: {
-              value: passwordRegExp,
-              message: 'LOGIN_ERROR_INVALID_PASSWORD',
-            },
-          }}
-        />
+        <Stack pt={2} spacing={3}>
+          <LabelledInput
+            title="Email"
+            name="email"
+            errors={errors}
+            register={register}
+            rules={{
+              required: 'LOGIN_ERROR_REQUIRED',
+              pattern: {
+                value: emailRegExp,
+                message: 'LOGIN_ERROR_INVALID_EMAIL',
+              },
+            }}
+          />
+          <LabelledInput
+            title="Password"
+            name="password"
+            type="password"
+            errors={errors}
+            register={register}
+            rules={{
+              required: 'LOGIN_ERROR_REQUIRED',
+              pattern: {
+                value: passwordRegExp,
+                message: 'LOGIN_ERROR_INVALID_PASSWORD',
+              },
+            }}
+          />
+        </Stack>
+
         <Recaptcha onChange={verifyRecaptcha} />
         <RightBox>
           <Link href={pages.forgotPassword}>{t('LOGIN_FORGOT_PASSWORD')}</Link>

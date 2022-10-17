@@ -1,26 +1,23 @@
-import { styled, Typography } from '@mui/material'
+import { InputLabel, InputLabelProps, Typography } from '@mui/material'
 import React from 'react'
 
-interface LabelTypoProps {
+export interface LabelTypoProps extends InputLabelProps {
   desc: string
+  required?: boolean
 }
-const LabelField = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-})
 
-const RequiredMark = () => {
-  return <span style={{ color: 'red' }}>*</span>
+export const RequiredMark = () => {
+  return <span style={{ color: 'red' }}> *</span>
 }
-const LabelTypo: React.FC<LabelTypoProps> = ({ desc }) => {
+
+const LabelTypo: React.FC<LabelTypoProps> = ({ desc, required, ...rest }: LabelTypoProps) => {
   return (
-    <>
-      <LabelField>
-        <Typography variant="h4" sx={{ marginBottom: '5px' }}>
-          {desc} <RequiredMark />
-        </Typography>
-      </LabelField>
-    </>
+    <InputLabel {...rest} sx={{ margin: '4px 0px' }}>
+      <Typography variant="h4">
+        {desc}
+        {required && <RequiredMark />}
+      </Typography>
+    </InputLabel>
   )
 }
 

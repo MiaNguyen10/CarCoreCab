@@ -12,7 +12,7 @@ const AddButton: React.FC<AddButtonProps> = ({ desc, handleClick }) => {
       variant="contained"
       color="primary"
       endIcon={<AddIcon />}
-      sx={{ float: 'right', marginRight: '30px', marginBottom: '10px' }}
+      sx={{ float: 'right', marginRight: '44px', marginBottom: '10px' }}
       onClick={handleClick}
     >
       <Typography variant="h5" fontWeight="900" margin="5px">

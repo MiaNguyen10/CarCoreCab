@@ -10,7 +10,7 @@ import {
   styled,
   Typography,
 } from '@mui/material'
-import { LabelTypo, SearchSelect, TextFieldFill } from 'app/components'
+import { LabelledInput, LabelTypo, SearchSelect } from 'app/components'
 import { Province } from 'app/config/Data'
 import { licensePlateRegExp } from 'cores/utils/regexFormat'
 import React from 'react'
@@ -64,7 +64,12 @@ const AddCarPopup = ({ open, handleClose, onFormSubmit, errorMessage }: AddCarPo
     defaultValues,
   })
 
-  const { handleSubmit, control } = methods
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { errors },
+  } = methods
 
   const onSubmit: SubmitHandler<ICarCheckDuplicate> = (data): void => {
     onFormSubmit(data)
@@ -92,20 +97,18 @@ const AddCarPopup = ({ open, handleClose, onFormSubmit, errorMessage }: AddCarPo
                 sx={{ marginTop: '10px' }}
               >
                 <Grid item xs={12}>
-                  <div>
-                    <LabelTypo desc={`${t('CAR_LICENSE_PLATE_NO')}`} />
-                    <Controller
-                      name="licensePlateNo"
-                      control={control}
-                      render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <TextFieldFill value={value} onChange={onChange} error={error} width={320} />
-                      )}
-                    />
-                  </div>
+                  <LabelledInput
+                    title={`${t('CAR_LICENSE_PLATE_NO')}`}
+                    name="licensePlateNo"
+                    errors={errors}
+                    register={register}
+                    sx={{ width: 320 }}
+                    required
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <div>
-                    <LabelTypo desc={`${t('CAR_PROVINCE')}`} />
+                    <LabelTypo desc={`${t('CAR_PROVINCE')}`} required />
                     <Controller
                       name="province"
                       control={control}

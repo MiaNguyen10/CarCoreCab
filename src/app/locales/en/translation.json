@@ -1,7 +1,14 @@
 {
-  "ACCES_DENIED_CODE": "403",
-  "ACCES_DENIED_TITLE": "ACCESS DENIED",
-  "ACCES_DENIED_DESCRIPTION": "You currently does not have access to this page.",
+  "PAGE_NOT_FOUND_TITLE": "PAGE NOT FOUND",
+  "PAGE_NOT_FOUND_CODE": "404",
+  "PAGE_NOT_FOUND_DESCRIPTION": "The page you are looking for does not exist.",
+
+  "ACCESS_DENIED_TITLE": "ACCESS DENIED",
+  "ACCESS_DENIED_CODE": "403",
+  "ACCESS_DENIED_DESCRIPTION": "You currently does not have access to this page.",
+
+  "PROFILE_MENU_PROFILE": "Profile",
+  "PROFILE_MENU_LOGOUT": "Log out",
 
   "CAR_MANAGEMENT_TITLE": "Car Management",
   "COMPANY_MANAGEMENT_TITLE": "Company Management",
@@ -70,14 +77,6 @@
   "BACKEND_ERROR_PASSWORD_NOT_MATCH": "Password do not match",
   "BACKEND_ERROR_CREATE_PROFILE_FAILED": "Profile cannot be created",
   "BACKEND_ERROR_FALLBACK": "Unable to identify an error",
-
-  "PAGE_NOT_FOUND_TITLE": "PAGE NOT FOUND",
-  "PAGE_NOT_FOUND_CODE": "404",
-  "PAGE_NOT_FOUND_DESCRIPTION": "The page you are looking for does not exist.",
-
-  "ACCESS_DENIED_TITLE": "ACCESS DENIED",
-  "ACCESS_DENIED_CODE": "403",
-  "ACCESS_DENIED_DESCRIPTION": "You currently does not have access to this page.",
 
   "COMPANY_COMPANY_LIST": "Company List",
   "COMPANY_COMPANY_NAME": "Company Name",
@@ -158,7 +157,7 @@
   "CAR_CAR_LABELING_OTHER_COLOR": "Other color",
   "CAR_CAR_LABELING_FRAME_NO": "VIN/Frame no.",
   "CAR_CAR_LABELING_FRAME_POSITION": "Frame position",
-  "CAR_CAR_LABELING_OTHER_FUEL": "Frame position",
+  "CAR_CAR_LABELING_OTHER_FUEL": "Fuel",
   "CAR_CAR_LABELING_ENGINE_BRAND": "Engine brand",
   "CAR_CAR_LABELING_ENGINE_NO": "Engine no.",
   "CAR_CAR_LABELING_ENGINE_POSITION": "Engine position",
@@ -186,7 +185,8 @@
   "CAR_CAR_LABELING_SAMPLE_IMG_SUBTITLE": "(45 degree angle)",
   "CAR_CAR_LABELING_PURCHASE_PRICE": "Purchase price",
   "CAR_CAR_LABELING_SALE_PRICE": "Sample price",
-  "CAR_CAR_LABELING_APPRAISED_DATE": "Appraised date",
+  "CAR_CAR_LABELING_PURCHASE_PRICE_APPRAISED_DATE": "Date",
+  "CAR_CAR_LABELING_SALE_PRICE_APPRAISED_DATE": "Date",
   "CAR_CAR_LABELING_SKIP_BUTTON": "Skip",
   "CAR_CAR_LABELING_SAVE_BUTTON": "Save & Next",
   "CAR_CAR_LABELING_GEAR": "Gear",
@@ -201,7 +201,7 @@
   "CAR_CAR_LABELING_VIEW_LEFT": "Left",
   "CAR_CAR_LABELING_VIEW_RIGHT": "Right",
   "CAR_CAR_LABELING_LICENSE_PLATE": "License plate",
-  "CAR_CAR_LABELING_STEP_2_VIEW_MIN_LIMIT": "Required at least 4 images like sample above",
+  "CAR_CAR_LABELING_STEP_2_VIEW_MIN_LIMIT": "Required more images like sample above",
   "CAR_CAR_LABELING_STEP_2_VIEW_MAX_LIMIT": "Required 8 images like sample above",
   "CAR_CAR_LABELING_STEP_2_DUPLICATE_VIEW": "Duplicate view",
   "CAR_CAR_LABELING_STEP_4_DESC1": "Please upload a car dashboard image, frame the mileage with a red rectangle and",
@@ -251,11 +251,14 @@
   "STATUS_PENDING": "Pending",
   "STATUS_APPROVED": "Approved",
   "STATUS_DRAFT": "Draft",
+  "STATUS_SUSPEND": "Suspend",
 
   "CANCEL_BUTTON": "Cancel",
   "SUBMIT_BUTTON": "Submit",
+  "SAVE_BUTTON": "Save",
   "ADD_BUTTON": "Add",
 
+  "DIALOG_NOTIFICATION_AUTHENICATION_EXPIRED": "The authentication session has expired.\nPlease log in again.",
   "DIALOG_QUESTION_SAVE_CHANGE": "Do you want to save changes ?",
   "DIALOG_QUESTION_DELETE": "Are you sure you want to delete ?",
   "DIALOG_SAVE_SUCCESSFULLY": "Changes have been saved successfully.",

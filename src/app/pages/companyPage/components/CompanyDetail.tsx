@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -15,27 +15,31 @@ import {
   HeaderTypo,
   LabelTypo,
   NotifyDialog,
-  SelectStatusDetail,
-  TextFieldFill,
   useConfirmation,
+  LabelledInput,
+  OptionSelect,
 } from 'app/components'
-import { STATUS } from 'app/config/Constant'
-import { PageUrlProps, status } from 'app/config/interfaces'
+import { SelectCompanyStatus, STATUS } from 'app/config/Constant'
+import { PageUrlProps, CompanyStatus } from 'app/config/interfaces'
 import pages from 'app/config/pages'
+import { useSession } from 'app/middlewares/hooks/useSession'
+import { backendErrorToMessage, IError } from 'cores/factories/errorFactory'
 import { resetCompanyStatus, selectAllCompanies, selectCompanyById, selectStatus } from 'cores/reducers/company'
 import { selectState } from 'cores/reducers/user'
 import { useAppDispatch, useAppSelector } from 'cores/store/hook'
 import { addCompany, editCompany, getCompanyList } from 'cores/thunk/company'
 import { phoneRegExp } from 'cores/utils/regexFormat'
+import { RequestState } from 'cores/reducers/interfaces'
 
 export interface ICompanyAdd {
   name: string
   coordinatorName: string
   coordinatorTel: string
-  status: status
+  status: CompanyStatus
 }
 const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const confirmation = useConfirmation()
@@ -45,6 +49,7 @@ const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
   const company = useAppSelector((state) => selectCompanyById(state, companyId!))
   const token = useAppSelector(selectState)
   const companyStatus = useAppSelector(selectStatus)
+
   const defaultValues = useMemo<ICompanyAdd>(() => {
     return {
       name: '',
@@ -76,7 +81,15 @@ const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
     defaultValues,
   })
 
-  const { handleSubmit, control, setValue, reset } = methods
+  const {
+    handleSubmit,
+    register,
+    control,
+    setValue,
+    reset,
+    getValues,
+    formState: { errors, isValid },
+  } = methods
 
   const handleCancel = () => {
     navigate(`${pages.companyListPath}`)
@@ -127,7 +140,10 @@ const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
             setOpenSuccess(true)
           }
           // eslint-disable-next-line no-empty
-        } catch (err) {}
+        } catch (error) {
+          const errorMessage = backendErrorToMessage(error as IError)
+          setErrorMessage(errorMessage)
+        }
       }
     })
   }
@@ -145,6 +161,33 @@ const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleAddCompany = async (): Promise<void> => {
+    if (token.token) {
+      await dispatch(
+        addCompany({
+          token: token.token!,
+          name: getValues('name'),
+          coordinatorName: getValues('coordinatorName'),
+          coordinatorTel: getValues('coordinatorTel'),
+          status: getValues('status'),
+          companyId: '',
+        }),
+      ).unwrap()
+    }
+  }
+
+  const handleSessionTimeout = () => {
+    if (isValid && isAdd) {
+      handleAddCompany()
+    }
+  }
+
+  const sessionTimeout = useSession(handleSessionTimeout)
+
+  useEffect(() => {
+    sessionTimeout
+  }, [sessionTimeout])
+
   return (
     <>
       <HeaderTypo header={`${t('COMPANY')}`} />
@@ -157,76 +200,67 @@ const CompanyDetail: React.FC<PageUrlProps> = ({ isAdd, isEdit, isView }) => {
       </Typography>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid
-              container
-              spacing={3}
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ marginTop: '10px' }}
-            >
-              <Grid item xs={12}>
-                <div>
-                  <LabelTypo desc={`${t('COMPANY_COMPANY_NAME')}`} />
-                  <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                      <TextFieldFill value={value} onChange={onChange} error={error} isView={isView} width={320} />
-                    )}
+          <Box sx={{ flexGrow: 1, marginTop: '30px' }}>
+            <Container fixed>
+              <Stack direction="column" alignItems="center" justifyContent="center" spacing={2}>
+                <LabelledInput
+                  title={`${t('COMPANY_COMPANY_NAME')}`}
+                  name="name"
+                  errors={errors}
+                  register={register}
+                  required
+                  disabled={!isAdd}
+                />
+                <LabelledInput
+                  title={`${t('COMPANY_CONTACT_PERSON')}`}
+                  name="coordinatorName"
+                  errors={errors}
+                  register={register}
+                  required
+                  disabled={!!isView}
+                />
+                <LabelledInput
+                  title={`${t('COMPANY_TELEPHONE')}`}
+                  name="coordinatorTel"
+                  errors={errors}
+                  register={register}
+                  required
+                  disabled={!!isView}
+                />
+                <div style={{ marginTop: '12px' }}>
+                  <LabelTypo
+                    sx={{ margin: '8px 0px' }}
+                    htmlFor={'labelled-input-status'}
+                    desc={`${t('STATUS')}`}
+                    required
                   />
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <LabelTypo desc={`${t('COMPANY_CONTACT_PERSON')}`} />
-                  <Controller
-                    name="coordinatorName"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                      <TextFieldFill value={value} onChange={onChange} error={error} isView={isView} width={320} />
-                    )}
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <LabelTypo desc={`${t('COMPANY_TELEPHONE')}`} />
-                  <Controller
-                    name="coordinatorTel"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                      <TextFieldFill value={value} onChange={onChange} error={error} isView={isView} width={320} />
-                    )}
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={12}>
-                <div>
-                  <LabelTypo desc={`${t('STATUS')}`} />
                   <Controller
                     name="status"
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
-                      <SelectStatusDetail value={value} onChange={onChange} error={error} isView={isView} />
+                      <OptionSelect
+                        value={value}
+                        onChange={onChange}
+                        error={error}
+                        isView={isView}
+                        width={320}
+                        option={SelectCompanyStatus}
+                      />
                     )}
                   />
                 </div>
-              </Grid>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <Grid item xs={12} sx={{ marginLeft: '450px' }}>
-                <Button variant="contained" color="secondary" onClick={handleCancel} sx={{ margin: '10px' }}>
-                  {t('CANCEL_BUTTON')}
-                </Button>
-                {!isView && (
-                  <Button type="submit" variant="contained" color="primary">
-                    {t('SUBMIT_BUTTON')}
+                <span>&nbsp;</span>
+                <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ width: '320px' }}>
+                  <Button variant="outlined" onClick={handleCancel} disabled={companyStatus === RequestState.LOADING}>
+                    {t('CANCEL_BUTTON')}
                   </Button>
-                )}
-              </Grid>
-            </Grid>
+                  <Button variant="contained" type="submit" disabled={companyStatus === RequestState.LOADING}>
+                    {t('SAVE_BUTTON')}
+                  </Button>
+                </Stack>
+                {errorMessage && <Typography sx={{ color: '#d32f2f' }}>{t(errorMessage)}</Typography>}
+              </Stack>
+            </Container>
           </Box>
         </form>
       </FormProvider>

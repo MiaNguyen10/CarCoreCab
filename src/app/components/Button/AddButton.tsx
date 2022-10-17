@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import AddIcon from '@mui/icons-material/Add'
-import { Button, Typography } from '@mui/material'
+import { Button } from '@mui/material'
 
 interface AddButtonProps {
   desc: string
@@ -18,9 +18,7 @@ const AddButton: React.FC<AddButtonProps> = ({ desc, url }) => {
       sx={{ float: 'right', marginRight: '30px', marginBottom: '10px' }}
       onClick={() => navigate(url)}
     >
-      <Typography variant="h5" fontWeight="900" margin="5px">
-        {desc}
-      </Typography>
+      {desc}
     </Button>
   )
 }

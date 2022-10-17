@@ -16,13 +16,6 @@ import { getUserDetail } from 'cores/thunk/user'
 
 import { ConfirmDialog, SuccessDialog } from './dialogs'
 
-const CancelButton = styled(Button)({
-  fontSize: 14,
-  fontWeight: 900,
-  height: 44,
-  width: 88,
-})
-
 const ErrorTypo = styled(Typography)({
   color: '#E53F3F',
 })
@@ -137,58 +130,63 @@ const Profile = () => {
       <SuccessDialog isOpenDialog={isOpenSuccessDialog} setIsOpenDialog={setIsOpenSuccessDialog} />
       <FormHeader name="PROFILE_TITLE"></FormHeader>
       <Box component="form" onSubmit={handleSubmit(submitHandler)}>
-        <Grid container direction="row" alignItems="center" justifyContent="center" sx={{ width: 700 }}>
+        <Grid container direction="row" alignItems="center" justifyContent="center" sx={{ width: 700 }} spacing={3}>
           <Grid item xs={6}>
             <LabelledInput
               disabled
-              title="Email"
+              title={t('PROFILE_INPUT_LABEL_EMAIL')}
               name="email"
               errors={errors}
               register={register}
               label={currentSession.username}
+              required
             />
           </Grid>
           <Grid item xs={6}>
             <LabelledInput
               disabled
-              title="Role"
+              title={t('PROFILE_INPUT_LABEL_ROLE')}
               name="role"
               errors={errors}
               register={register}
-              label={currentSession.role}
+              label={currentSession.teir}
+              required
             />
           </Grid>
           <Grid item xs={6}>
             <LabelledInput
               disabled
-              title="First Name"
+              title={t('PROFILE_INPUT_LABEL_FIRST_NAME')}
               name="firstName"
               errors={errors}
               register={register}
               label={userDetail?.name ?? ''}
+              required
             />
           </Grid>
           <Grid item xs={6}>
             <LabelledInput
               disabled
-              title="Last Name"
+              title={t('PROFILE_INPUT_LABEL_LAST_NAME')}
               name="lastName"
               errors={errors}
               register={register}
               label={userDetail?.surname ?? ''}
+              required
             />
           </Grid>
           <Grid item xs={12}>
-            <Divider sx={{ marginTop: 4 }} />
-            <CenterBox sx={{ marginTop: 3 }}>
+            <Divider sx={{ marginTop: 2 }} />
+            <CenterBox sx={{ marginTop: 4 }}>
               <Typography variant="h3">{t('PROFILE_LABEL_RESET_PASSWORD')}</Typography>
             </CenterBox>
             <LabelledInput
-              title="Current Password"
+              title={t('PROFILE_INPUT_LABEL_CURRENT_PASSWORD')}
               name="currentPassword"
               type="password"
               errors={errors}
               register={register}
+              required
               rules={{
                 validate: {
                   required: (value) => {
@@ -210,7 +208,7 @@ const Profile = () => {
           </Grid>
           <Grid item xs={6}>
             <LabelledInput
-              title="New Password"
+              title={t('PROFILE_INPUT_LABEL_NEW_PASSWORD')}
               name="newPassword"
               type="password"
               errors={errors}
@@ -236,7 +234,7 @@ const Profile = () => {
           </Grid>
           <Grid item xs={6}>
             <LabelledInput
-              title="Confirm New Password"
+              title={t('PROFILE_INPUT_LABEL_CONFIRM_NEW_PASSWORD')}
               name="confirmNewPassword"
               type="password"
               errors={errors}
@@ -264,9 +262,9 @@ const Profile = () => {
         </Grid>
         <Grid item xs={12}>
           <RightBox sx={{ margin: 4 }}>
-            <CancelButton variant="contained" color="secondary" onClick={handleCancel}>
+            <Button variant="contained" color="secondary" onClick={handleCancel}>
               {t('PROFILE_BUTTON_CANCEL')}
-            </CancelButton>
+            </Button>
             <FormSubmitButton name={'PROFILE_BUTTON_SAVE'} />
           </RightBox>
         </Grid>

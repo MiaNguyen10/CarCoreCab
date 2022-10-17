@@ -13,7 +13,7 @@ const HeaderMenu = (props: IMenuProps) => {
     if(menuName.includes('CAR')) {
       return [
         ETier.KBANK_ADMIN,
-        ETier.COMPANY_SUPERUSER,
+        ETier.COMPANY_ADMIN,
         ETier.COMPANY_CHECKER,
         ETier.COMPANY_LABELER,
         ETier.COMPANY_VIEWER,
@@ -21,7 +21,7 @@ const HeaderMenu = (props: IMenuProps) => {
     } else if (menuName.includes('USER') || menuName.includes('COMPANY')) {
       return [
         ETier.KBANK_ADMIN,
-        ETier.COMPANY_SUPERUSER,
+        ETier.COMPANY_ADMIN,
       ]
     }
 

@@ -12,9 +12,21 @@ import { useAppDispatch, useAppSelector } from 'cores/store/hook'
 import { getCompanyList } from 'cores/thunk/company'
 import { addUser, getUserList } from 'cores/thunk/user'
 import pages from 'app/config/pages'
+import { ICompanyDetail, RequestState } from 'cores/reducers/interfaces'
+import { backendErrorToMessage, IError } from 'cores/factories/errorFactory'
+
+const CompanyList = (array: ICompanyDetail[] | undefined) => {
+  return (
+    array?.map((company) => ({
+      id: company?.id ?? '',
+      name: company?.name ?? '',
+    })) ?? []
+  )
+}
 
 const AddUser = (): JSX.Element => {
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -22,12 +34,11 @@ const AddUser = (): JSX.Element => {
   const companyStatus = useAppSelector(selectStatus)
   const userStatus = useAppSelector(getUserStatus)
   const userList = useAppSelector(getAllUsers)
+  const allCompany = useAppSelector(selectAllCompanies)
+  const companyList = React.useMemo(() => {
+    return CompanyList(allCompany)
+  }, [allCompany])
 
-  const companyList =
-    useAppSelector(selectAllCompanies)?.map((company) => ({
-      id: company?.id ?? '',
-      name: company?.name ?? '',
-    })) ?? []
   const token = useAppSelector(selectState)
 
   const handleFormSubmit = ({ company, firstName, lastName, role, email }: IUserFormInput) => {
@@ -45,8 +56,10 @@ const AddUser = (): JSX.Element => {
             }),
           ).unwrap()
           setOpenSuccess(true)
-        } catch (err) {
-          // eslint-disable-next-line no-empty
+          setErrorMessage(undefined)
+        } catch (error) {
+          const errorMessage = backendErrorToMessage(error as IError)
+          setErrorMessage(errorMessage)
         }
       }
     })
@@ -74,9 +87,10 @@ const AddUser = (): JSX.Element => {
         <UserForm
           companyList={companyList}
           onFormSubmit={handleFormSubmit}
-          isLoading={userStatus === 'loading'}
+          isLoading={userStatus === RequestState.LOADING}
           userList={userList}
         />
+        {errorMessage && <Typography sx={{ color: '#d32f2f' }}>{t(errorMessage)}</Typography>}
       </Stack>
       <FullScreenDialog open={openSuccess} width={268} height={132}>
         <NotifyDialog handleClose={handleCloseSuccessDialog}></NotifyDialog>

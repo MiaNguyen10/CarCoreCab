@@ -119,6 +119,7 @@ const CarLabelStep1 = ({ carInformation, onChangeTab, onFormSubmit }: ICarLabelS
     control,
     formState: { errors },
     watch,
+    register,
   } = methods
 
   const onSubmit = (data: IRegistrationBook): void => {
@@ -256,6 +257,7 @@ const CarLabelStep1 = ({ carInformation, onChangeTab, onFormSubmit }: ICarLabelS
             <FormRegister
               control={control}
               errors={errors}
+              register={register}
               colorChecked={colorChecked}
               handleChange={handleChange}
               handleDelete={handleDelete}

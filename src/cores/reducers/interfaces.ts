@@ -1,4 +1,4 @@
-import { carStatus, status, DateField } from 'app/config/interfaces'
+import { CarStatus, status, DateField, CompanyStatus } from 'app/config/interfaces'
 import { IRegistrationBook, ICarPhotos, IConsole, IDashboard, ITaxSign } from 'app/pages/carPage/types'
 
 export interface IBackendError {
@@ -60,7 +60,7 @@ export interface ICompanyCreateInput {
   name: string
   coordinatorName: string
   coordinatorTel: string
-  status: status
+  status: CompanyStatus
 }
 
 export interface ICompanyUpdateInput {
@@ -69,7 +69,7 @@ export interface ICompanyUpdateInput {
   name: string
   coordinatorName: string
   coordinatorTel: string
-  status: status
+  status: CompanyStatus
 }
 
 export interface IGetCompanyDetailInput {
@@ -77,19 +77,41 @@ export interface IGetCompanyDetailInput {
   companyId: string
 }
 
-export interface IUserDetail extends DateField {
-  id?: string
+export interface IUserResponse extends DateField {
+  id: string
   email: string
   name: string
   surname: string
   companyId: string
   role: string
-  status: status
+  status: CompanyStatus
   createBy: string
+  lastEditBy: string
+}
+
+export interface IUserDetail {
+  no: number
+  id: string
+  email: string
+  name: {
+    firstName: string
+    lastName: string
+  }
+  company: string
+  role: string
+  status: status
+  createBy: {
+    by: string
+    date: string
+  }
+  editBy: {
+    by: string
+    date: string
+  }
 }
 
 export interface IUserList {
-  companies: IUserDetail[]
+  users: IUserResponse[]
 }
 
 export interface ICreateUserInput {
@@ -116,21 +138,28 @@ export interface IGetUserDetailInput {
 }
 export interface ICountCar {
   token: string
-  makeBrand: string
-  model: string
-  status: carStatus
+  filter?: {
+    makeBrand?: string
+    model?: string
+    status?: CarStatus
+  }
 }
 
 export interface ICountCarResponse {
-  numberOfCarCase: string
+  numberOfCarCase: number
 }
 
 export interface ICarListInput {
   token: string
-  startFrom: number
-  endAt: number
-  status: carStatus
-  licensePlateDigit?: string
+  filter?: {
+    startFrom?: number
+    endAt?: number
+    licensePlateDigit?: string
+    licensePlate?: string
+    makeBrand?: string
+    model?: string
+    status?: CarStatus
+  }
 }
 
 export interface ICarDetail {
@@ -143,7 +172,7 @@ export interface ICarDetail {
   modelYear: string
   submitterId: string
   lastUpdateById: string
-  status: carStatus
+  status: CarStatus
 }
 
 export interface ICarList {
@@ -204,3 +233,6 @@ export interface IGetCarDetailInput {
   id: string
 }
 
+export interface IProvinceList {
+  provinces: string[]
+}

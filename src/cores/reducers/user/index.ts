@@ -13,6 +13,7 @@ import {
   IBackendErrorResponse,
   IResetPasswordInput,
   RequestState,
+  IUserResponse,
 } from 'cores/reducers/interfaces'
 import { LocalStorageAdapter } from 'cores/adapters/LocalStorageAdapter'
 import { SessionException } from 'cores/exceptions/SessionException'
@@ -33,7 +34,7 @@ export interface UserState extends PlainObject {
   email: string
   status: RequestState
   users: IUserDetail[]
-  userDetail?: IUserDetail
+  userDetail?: IUserResponse
   error?: string
   errorCode?: string
 }
@@ -88,7 +89,7 @@ export const userSlice = createSlice({
       })
       .addCase(getUserDetail.fulfilled, (state, action) => {
         state.status = RequestState.SUCCEEDED
-        state.userDetail = action.payload as IUserDetail
+        state.userDetail = action.payload as IUserResponse
       })
       .addCase(getUserDetail.rejected, (state, action) => {
         state.status = RequestState.FAILED

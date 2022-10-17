@@ -2,6 +2,7 @@
 import { TextField, TextFieldProps } from '@mui/material'
 import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { dateFormats } from 'app/config/Constant'
 import { CaseForDay } from 'cores/utils/CaseForDay'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
@@ -11,11 +12,6 @@ import { FieldError } from 'react-hook-form'
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
-
-export const dateFormats = {
-  year: 'BBBB',
-  monthAndYear: 'MMMM BBBB',
-}
 
 interface DatePickerProps {
   onChange: (...event: any[]) => void
@@ -38,7 +34,8 @@ const DatePickerBuddhist = ({ value, onChange, error, width }: DatePickerProps) 
             <TextField
               {...params}
               sx={{
-                '.MuiInputBase-input': { width: { width }, height: 10 },
+                '.MuiInputBase-input': { height: 10 },
+                width,
               }}
               error={!!error}
               helperText={error ? error.message : null}
